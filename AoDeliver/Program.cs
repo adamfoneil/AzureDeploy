@@ -25,7 +25,7 @@ namespace AoDeliver
             e.InstallerArguments = @"""C:\Users\Adam\Dropbox\Visual Studio 2015\Projects\BlobBackupLib\Setup.deploy"" /b /q";
             //e.Execute();
 
-            e.Save(@"C:\Users\Adam\Dropbox\Visual Studio 2015\Projects\BlobBackupLib\BlobakUIWinForm\Blobak.deploy.xml");
+            e.SaveAs(@"C:\Users\Adam\Dropbox\Visual Studio 2015\Projects\BlobBackupLib\BlobakUIWinForm\Blobak.deploy.xml");
         }
     }
 }

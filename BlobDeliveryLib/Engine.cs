@@ -2,6 +2,7 @@
 using CloudDeployLib.Installers;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -15,48 +16,69 @@ namespace CloudDeployLib
         DeployMasterProcess
     }
 
-    public class Engine
+    public class Engine : Document
     {
         private static Dictionary<InstallType, IInstaller> _installers = new Dictionary<InstallType, IInstaller>()
         {
             { InstallType.Process, new Installers.Process() },
             { InstallType.ZipFile, new ZipFile() },
             { InstallType.DeployMasterProcess, new DeployMaster() }
-        };
+        };        
 
-        public string StagingFolder { get; set; }
-        public string ProductName { get; set; }
-        public string ProductVersionFile { get; set; }
+        [Category("Product")]
+        [Description("Local folder, typically bin/Release, where the installer gets component files")]
+        public string StagingFolder { get { return Get<string>(); } set { Set(value); } }
+
+        [Category("Product")]
+        [Description("Name of the product used to indicate where component version info is stored online")]
+        public string ProductName { get { return Get<string>(); } set { Set(value); } }
+
+        [Category("Product")]
+        [Description("EXE or DLL that defines the version number for the product as a whole")]
+        public string ProductVersionFile { get { return Get<string>(); } set { Set(value); } }
 
         public string GetProductVersion()
         {
-            return LocalVersion(Path.Combine(StagingFolder, ProductVersionFile)).ToString();
+            return LocalVersion(Path.Combine(Path.GetFullPath(StagingFolder), ProductVersionFile)).ToString();
         }
 
-        public InstallType Type { get; set; }
-        public string InstallerExecutable { get; set; }
-        public int InstallerSuccessCode { get; set; }
-        public string InstallerArguments { get; set; }
-        public string InstallerOutput { get; set; }
+        [Category("Installer")]
+        [Description("Type of installer")]
+        public InstallType Type { get { return Get<InstallType>(); } set { Set(value); } }
 
-        public string StorageAccountName { get; set; }
-        public string StorageAccountKey { get; set; }
-        public string ContainerName { get; set; }
-        
+        [Category("Installer")]
+        [Description("EXE file that builds your installer")]
+        public string InstallerExecutable { get { return Get<string>(); } set { Set(value); } }
+
+        [Category("Installer")]
+        [Description("Installer process return value that indicates success. Use -1 to ignore")]
+        public int InstallerSuccessCode { get { return Get<int>(); } set { Set(value); } }
+
+        [Category("Installer")]
+        [Description("Any arguments passed to the installer executable")]
+        public string InstallerArguments { get { return Get<string>(); } set { Set(value); } }
+
+        [Category("Installer")]
+        [Description("Installer run by the end user")]
+        public string InstallerOutput { get { return Get<string>(); } set { Set(value); } }
+
+        [Category("Blob Storage")]
+        [Description("Storage account name")]
+        public string StorageAccountName { get { return Get<string>(); } set { Set(value); } }
+
+        [Category("Blob Storage")]
+        [Description("Storage account key")]
+        public string StorageAccountKey { get { return Get<string>(); } set { Set(value); } }
+
+        [Category("Blob Storage")]
+        [Description("Container in which your installer executable is uploaded")]
+        public string ContainerName { get { return Get<string>(); } set { Set(value); } }
+
         public Engine()
-        {            
-        }
-
-        public static Engine Load(string fileName)
         {
-            return XmlSerializerHelper.Load<Engine>(fileName);
+            InstallerSuccessCode = -1;
         }
-
-        public void Save(string fileName)
-        {
-            XmlSerializerHelper.Save(this, fileName);
-        }
-
+        
         public void Execute()
         {            
             var localFileInfo = GetLocalVersions();            
@@ -148,6 +170,6 @@ namespace CloudDeployLib
         {
             var fv = FileVersionInfo.GetVersionInfo(fileName);
             return new Version(fv.FileVersion);
-        }
+        }        
     }
 }
