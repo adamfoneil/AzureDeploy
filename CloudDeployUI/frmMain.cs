@@ -4,11 +4,12 @@ using System;
 using System.Windows.Forms;
 using System.Xml;
 
-namespace CloudDeployUI
+namespace AzDeployUI
 {
     public partial class frmMain : Form
     {
         private Engine _engine = null;
+        private Options _options = null;
 
         public frmMain()
         {
@@ -178,6 +179,20 @@ namespace CloudDeployUI
             catch (XmlException)
             {
                 return false;
+            }
+        }
+
+        private void frmMain_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                _options = UserOptionsBase.Load<Options>("Options.xml", this);
+                _options.RestoreFormPosition(_options.MainFormPosition, this);
+                _options.TrackFormPosition(this, (fp) => _options.MainFormPosition = fp);
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
             }
         }
     }

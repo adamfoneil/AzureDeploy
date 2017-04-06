@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CloudDeployUI
+namespace AzDeployUI
 {
     // thanks to http://stackoverflow.com/questions/18726852/redirecting-console-writeline-to-textbox, answer by Servy
 

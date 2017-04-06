@@ -1,4 +1,4 @@
-﻿namespace CloudDeployUI
+﻿namespace AzDeployUI
 {
     partial class frmMain
     {
@@ -34,12 +34,12 @@
             this.tsbOpen = new System.Windows.Forms.ToolStripButton();
             this.tsbSave = new System.Windows.Forms.ToolStripButton();
             this.tsbRun = new System.Windows.Forms.ToolStripButton();
+            this.tsbAddToProject = new System.Windows.Forms.ToolStripButton();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tbConsole = new System.Windows.Forms.TextBox();
-            this.tsbAddToProject = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -101,6 +101,16 @@
             this.tsbRun.Text = "Run";
             this.tsbRun.Click += new System.EventHandler(this.tsbRun_Click);
             // 
+            // tsbAddToProject
+            // 
+            this.tsbAddToProject.Enabled = false;
+            this.tsbAddToProject.Image = ((System.Drawing.Image)(resources.GetObject("tsbAddToProject.Image")));
+            this.tsbAddToProject.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbAddToProject.Name = "tsbAddToProject";
+            this.tsbAddToProject.Size = new System.Drawing.Size(112, 22);
+            this.tsbAddToProject.Text = "Add to Project...";
+            this.tsbAddToProject.Click += new System.EventHandler(this.tsbAddToProject_Click);
+            // 
             // propertyGrid1
             // 
             this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -154,16 +164,6 @@
             this.tbConsole.Size = new System.Drawing.Size(447, 317);
             this.tbConsole.TabIndex = 0;
             // 
-            // tsbAddToProject
-            // 
-            this.tsbAddToProject.Enabled = false;
-            this.tsbAddToProject.Image = ((System.Drawing.Image)(resources.GetObject("tsbAddToProject.Image")));
-            this.tsbAddToProject.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbAddToProject.Name = "tsbAddToProject";
-            this.tsbAddToProject.Size = new System.Drawing.Size(112, 22);
-            this.tsbAddToProject.Text = "Add to Project...";
-            this.tsbAddToProject.Click += new System.EventHandler(this.tsbAddToProject_Click);
-            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
@@ -177,6 +177,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Cloud Deployer";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
+            this.Load += new System.EventHandler(this.frmMain_Load);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.tabControl1.ResumeLayout(false);
