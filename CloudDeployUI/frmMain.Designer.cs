@@ -40,6 +40,7 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tbConsole = new System.Windows.Forms.TextBox();
+            this.btnAzDeployPath = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -53,7 +54,8 @@
             this.tsbOpen,
             this.tsbSave,
             this.tsbRun,
-            this.tsbAddToProject});
+            this.tsbAddToProject,
+            this.btnAzDeployPath});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(461, 25);
@@ -164,6 +166,15 @@
             this.tbConsole.Size = new System.Drawing.Size(447, 317);
             this.tbConsole.TabIndex = 0;
             // 
+            // btnAzDeployPath
+            // 
+            this.btnAzDeployPath.Image = ((System.Drawing.Image)(resources.GetObject("btnAzDeployPath.Image")));
+            this.btnAzDeployPath.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnAzDeployPath.Name = "btnAzDeployPath";
+            this.btnAzDeployPath.Size = new System.Drawing.Size(124, 22);
+            this.btnAzDeployPath.Text = "AzDeploy.exe Path";
+            this.btnAzDeployPath.Click += new System.EventHandler(this.btnAzDeployPath_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
@@ -202,6 +213,7 @@
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TextBox tbConsole;
         private System.Windows.Forms.ToolStripButton tsbAddToProject;
+        private System.Windows.Forms.ToolStripButton btnAzDeployPath;
     }
 }
 

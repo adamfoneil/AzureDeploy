@@ -9,6 +9,11 @@ namespace AzDeployUI
 {
     public class Options : UserOptionsBase
     {
+        public Options()
+        {
+            AzDeployPath = "AzDeploy.exe";
+        }
+
         public FormPosition MainFormPosition { get; set; }
         public string AzDeployPath { get; set; }
     }

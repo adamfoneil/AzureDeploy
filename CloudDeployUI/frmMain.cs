@@ -1,6 +1,7 @@
 ﻿using AdamOneilSoftware;
 using CloudDeployLib;
 using System;
+using System.IO;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -120,6 +121,12 @@ namespace AzDeployUI
         {
             try
             {
+                if (!File.Exists(_options.AzDeployPath))
+                {
+                    MessageBox.Show("The full path to AzDeploy.exe has not been set yet. You will select this next.");
+                    SelectAzDeployPath();
+                }
+
                 if (MessageBox.Show("This will add a post-build event call to CloudDeploy.exe using this script. You will select a .csproj file next.", "Add To Project", MessageBoxButtons.OKCancel) == DialogResult.OK)
                 {
                     OpenFileDialog dlg = new OpenFileDialog();
@@ -158,7 +165,7 @@ namespace AzDeployUI
                     elPropertyGroup.AppendChild(ndPostBuild);
                 }
 
-                ndPostBuild.InnerText = $"AzDeploy.exe \"{FileSystem.GetRelativePath(projectFile, deployScript)}\"";
+                ndPostBuild.InnerText = $"{_options.AzDeployPath} \"{FileSystem.GetRelativePath(projectFile, deployScript)}\"";
 
                 doc.Save(projectFile);
             }
@@ -193,6 +200,30 @@ namespace AzDeployUI
             catch (Exception exc)
             {
                 MessageBox.Show(exc.Message);
+            }
+        }
+
+        private void btnAzDeployPath_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                SelectAzDeployPath();
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
+            }
+        }
+
+        private void SelectAzDeployPath()
+        {
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.Filter = "Exe files|*.exe|All Files|*.*";
+            dlg.FileName = _options.AzDeployPath;
+            dlg.Title = "Select Path of AzDeploy.exe";
+            if (dlg.ShowDialog() == DialogResult.OK)
+            {
+                _options.AzDeployPath = dlg.FileName;
             }
         }
     }

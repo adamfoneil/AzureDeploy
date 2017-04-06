@@ -128,23 +128,23 @@ namespace CloudDeployLib
             if (newVersionAvailable)
             {
                 Console.WriteLine(newVersionInfo);
-                Console.WriteLine("Building installer...");
+                Console.WriteLine("AzDeploy: building installer...");
                 _installers[Type].Run(this);
 
                 string version = GetProductVersion();
-                Console.WriteLine($"Uploading {InstallerOutput}, version {version}...");
+                Console.WriteLine($"AzDeploy: uploading {InstallerOutput}, version {version}...");
                 await Upload(version);
 
-                Console.WriteLine("Uploading new version info...");
+                Console.WriteLine("AzDeploy: uploading new version info...");
                 var versionInfoList = new FileVersionList();
                 versionInfoList.AddRange(localFileInfo);                
                 AzureXmlSerializerHelper.Upload(versionInfoList, VersionInfoUri(), StorageAccountKey);
 
-                Console.WriteLine("Upload completed successfully.");
+                Console.WriteLine("AzDeploy: upload completed successfully.");
             }
             else
             {
-                Console.WriteLine("No new version to upload.");
+                Console.WriteLine("AzDeploy: no new version to upload.");
             }
         }
 
