@@ -83,6 +83,11 @@ namespace CloudDeployLib
             InstallerSuccessCode = -1;
         }
         
+        public static Engine Load(string fileName)
+        {
+            return Load<Engine>(fileName);
+        }
+
         public async Task ExecuteAsync()
         {            
             var localFileInfo = GetLocalVersions();            

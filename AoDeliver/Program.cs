@@ -1,31 +1,27 @@
-﻿using AdamOneilSoftware;
-using CloudDeployLib;
-using Microsoft.WindowsAzure.Storage.Auth;
+﻿using CloudDeployLib;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace AoDeliver
+namespace CloudDeploy
 {
     class Program
     {
         static void Main(string[] args)
         {
-            Engine e = new Engine();
-            e.StorageAccountName = "adamosoftware";
-            e.StorageAccountKey = "gSJlhScBOAskz9tIM+iUbxYwNozSjR26D+PFLULOmWSE1OoRKwwUO1kyS4kzuwuRjrTwMIori/9lG2+jRZMRRQ==";
-            e.ContainerName = "install";
-            e.ProductName = "Blobak";
-            e.ProductVersionFile = "BlobakUI.exe";
-            e.StagingFolder = @"C:\Users\Adam\Dropbox\Visual Studio 2015\Projects\BlobBackupLib\BlobakUIWinForm\bin\Release";
-            e.InstallerExecutable = @"C:\Program Files\Just Great Software\DeployMaster\DeployMaster.exe";
-            e.InstallerArguments = @"""C:\Users\Adam\Dropbox\Visual Studio 2015\Projects\BlobBackupLib\Setup.deploy"" /b /q";
-            //e.Execute();
+            try
+            {
+                if (args.Length != 1) throw new InvalidOperationException("CloudDeploy.exe: script file argument is required.");
+                string script = args[0];
+                if (File.Exists(script)) throw new FileNotFoundException($"CloudDeploy.exe: script file {script} not found.");
 
-            e.SaveAs(@"C:\Users\Adam\Dropbox\Visual Studio 2015\Projects\BlobBackupLib\BlobakUIWinForm\Blobak.deploy.xml");
+                Engine e = Engine.Load(args[0]);
+                // thanks to http://stackoverflow.com/questions/13002507/how-can-i-call-async-go-method-in-for-example-main, answer by Tim S
+                e.ExecuteAsync().Wait();
+            }
+            catch (Exception exc)
+            {
+                Console.WriteLine(exc.Message);
+            }
         }
     }
 }
