@@ -1,6 +1,8 @@
-﻿using CloudDeployLib;
+﻿using AdamOneilSoftware;
+using CloudDeployLib;
 using System;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace CloudDeployUI
 {
@@ -45,6 +47,7 @@ namespace CloudDeployUI
                     this.Text = $"Cloud Deployer - {_engine.Filename}";
                     tsbSave.Enabled = true;
                     tsbRun.Enabled = true;
+                    tsbAddToProject.Enabled = true;
                 }
             }
             catch (Exception exc)
@@ -109,6 +112,72 @@ namespace CloudDeployUI
             finally
             {
                 Console.SetOut(Console.Out);
+            }
+        }
+
+        private void tsbAddToProject_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (MessageBox.Show("This will add a post-build event call to CloudDeploy.exe using this script. You will select a .csproj file next.", "Add To Project", MessageBoxButtons.OKCancel) == DialogResult.OK)
+                {
+                    OpenFileDialog dlg = new OpenFileDialog();
+                    dlg.Filter = "Visual Studio Project Files|*.csproj|All Files|*.*";
+                    if (dlg.ShowDialog() == DialogResult.OK)
+                    {
+                        AddBuildEvent(dlg.FileName, _engine.Filename);
+                    }
+                }
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
+            }
+        }
+
+        private void AddBuildEvent(string projectFile, string deployScript)
+        {
+            if (IsXmlFile(projectFile))
+            {
+                XmlDocument doc = new XmlDocument();
+                doc.Load(projectFile);
+
+                // xpath help from http://stackoverflow.com/questions/4313520/is-it-possible-to-ignore-namespaces-in-c-sharp-when-using-xpath, answer by Martin Honnen
+                XmlNode ndPostBuild = doc.SelectSingleNode("/*[local-name()='Project']/*[local-name()='PropertyGroup']/*[local-name()='PostBuildEvent']");
+                if (ndPostBuild != null)
+                {
+                    if (MessageBox.Show($"The project already has this post build event:\r\n{ndPostBuild.InnerText}\r\n\r\nDo you want to replace it?", "Replace Post Build Event", MessageBoxButtons.YesNo) == DialogResult.No) return;
+                }
+                else
+                {
+                    // removing namespace thanks to http://stackoverflow.com/questions/135000/how-to-prevent-blank-xmlns-attributes-in-output-from-nets-xmldocument, CJohnson
+                    XmlElement elPropertyGroup = doc.CreateElement("PropertyGroup", doc.DocumentElement.NamespaceURI);
+                    ndPostBuild = doc.CreateElement("PostBuildEvent", doc.DocumentElement.NamespaceURI);
+                    doc.DocumentElement.AppendChild(elPropertyGroup);
+                    elPropertyGroup.AppendChild(ndPostBuild);
+                }
+
+                ndPostBuild.InnerText = $"AzDeploy.exe \"{FileSystem.GetRelativePath(projectFile, deployScript)}\"";
+
+                doc.Save(projectFile);
+            }
+            else
+            {
+                throw new NotImplementedException("Visual Studio 2017 not supported yet.");
+            }
+        }
+
+        private bool IsXmlFile(string fileName)
+        {
+            try
+            {
+                XmlDocument doc = new XmlDocument();
+                doc.Load(fileName);
+                return true;
+            }
+            catch (XmlException)
+            {
+                return false;
             }
         }
     }

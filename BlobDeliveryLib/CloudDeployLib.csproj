@@ -7,8 +7,8 @@
     <ProjectGuid>{079305DB-C6FB-4628-BFAB-DF969EA2B853}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CloudDeployLib</RootNamespace>
-    <AssemblyName>CloudDeployLib</AssemblyName>
+    <RootNamespace>AzDeployLib</RootNamespace>
+    <AssemblyName>AzDeployLib</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
