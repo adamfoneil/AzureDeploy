@@ -97,6 +97,7 @@
             this.tsbRun.Name = "tsbRun";
             this.tsbRun.Size = new System.Drawing.Size(48, 22);
             this.tsbRun.Text = "Run";
+            this.tsbRun.Click += new System.EventHandler(this.tsbRun_Click);
             // 
             // propertyGrid1
             // 

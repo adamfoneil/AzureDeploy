@@ -1,11 +1,15 @@
 ﻿using AdamOneilSoftware;
 using CloudDeployLib.Installers;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Auth;
+using Microsoft.WindowsAzure.Storage.Blob;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace CloudDeployLib
 {
@@ -79,49 +83,77 @@ namespace CloudDeployLib
             InstallerSuccessCode = -1;
         }
         
-        public void Execute()
+        public async Task ExecuteAsync()
         {            
             var localFileInfo = GetLocalVersions();            
             var cloudFileInfo = GetCloudVersions();
 
             bool newVersionAvailable = false;
+            string newVersionInfo = null;
 
             if (!cloudFileInfo.Any())
             {
                 // no cloud version info present, so we'll assume new version available
                 newVersionAvailable = true;
+                newVersionInfo = "No cloud version info found, installer will be uploaded.";
             }
             else
             {
                 // have any local version numbers increased?
-                newVersionAvailable = 
-                    (from local in localFileInfo
-                    join cloud in cloudFileInfo on local.Filename equals cloud.Filename
-                    where local.GetVersion() > cloud.GetVersion()
-                    select local).Any();
+                var newVersions = from local in localFileInfo
+                                  join cloud in cloudFileInfo on local.Filename equals cloud.Filename
+                                  where local.GetVersion() > cloud.GetVersion()
+                                  select local;
+
+                if (newVersions.Any())
+                {
+                    newVersionAvailable = true;
+                    newVersionInfo = $"New file versions found: {string.Join(", ", newVersions.Select(fv => $"{fv.Filename} = {fv.Version.ToString()}"))}";
+                }
 
                 if (!newVersionAvailable)
                 {
                     // have any new files been added?
-                    newVersionAvailable = localFileInfo.Any(local => !cloudFileInfo.Any(cloud => local.Filename.Equals(cloud.Filename)));
+                    var newFiles = localFileInfo.Where(local => !cloudFileInfo.Any(cloud => local.Filename.Equals(cloud.Filename)));
+                    newVersionInfo = $"New files added to project: {string.Join(", ", newFiles.Select(fv => fv.Filename))}";
+                    newVersionAvailable = newFiles.Any();
                 }
             }
 
             if (newVersionAvailable)
-            {                
+            {
+                Console.WriteLine(newVersionInfo);
+                Console.WriteLine("Building installer...");
                 _installers[Type].Run(this);
-                
-                Upload(InstallerOutput, LocalVersion(ProductVersionFile).ToString());
-                
+
+                string version = GetProductVersion();
+                Console.WriteLine($"Uploading {InstallerOutput}, version {version}...");
+                await Upload(version);
+
+                Console.WriteLine("Uploading new version info...");
                 var versionInfoList = new FileVersionList();
                 versionInfoList.AddRange(localFileInfo);                
                 AzureXmlSerializerHelper.Upload(versionInfoList, VersionInfoUri(), StorageAccountKey);
+
+                Console.WriteLine("Upload completed successfully.");
+            }
+            else
+            {
+                Console.WriteLine("No new version to upload.");
             }
         }
 
-        private void Upload(string installerOutput, string version)
+        private async Task Upload(string version)
         {
-            throw new NotImplementedException();
+            CloudStorageAccount acct = new CloudStorageAccount(new StorageCredentials(StorageAccountName, StorageAccountKey), true);
+            CloudBlobClient client = acct.CreateCloudBlobClient();
+            CloudBlobContainer container = client.GetContainerReference(ContainerName);
+            container.CreateIfNotExists();
+
+            string fileName = Path.GetFileName(InstallerOutput);
+            CloudBlockBlob blob = container.GetBlockBlobReference(fileName);                
+            blob.Metadata.Add("version", version);
+            await blob.UploadFromFileAsync(InstallerOutput);
         }
 
         private BlobUri VersionInfoUri()
@@ -139,7 +171,7 @@ namespace CloudDeployLib
             }
             else
             {
-                return new FileVersionList();
+                result = new FileVersionList();
             }
             return result;
         }
@@ -151,19 +183,6 @@ namespace CloudDeployLib
                 Directory.GetFiles(StagingFolder, mask)
                 .Where(f => !f.EndsWith("vshost.exe"))
                 .Select(f => new FileVersion() { Filename = Path.GetFileName(f).ToLower(), Version = LocalVersion(f).ToString() }));
-        }
-
-        private static Version OnlineVersion(Dictionary<string, string> versionInfo, string fileName)
-        {
-            string filenameOnly = Path.GetFileName(fileName);
-            if (versionInfo.ContainsKey(filenameOnly))
-            {
-                return new Version(versionInfo[filenameOnly]);
-            }
-            else
-            {
-                return new Version("0.0.0");
-            }
         }
 
         private static Version LocalVersion(string fileName)

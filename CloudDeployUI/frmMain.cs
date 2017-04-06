@@ -93,5 +93,23 @@ namespace CloudDeployUI
                 MessageBox.Show(exc.Message);
             }
         }
+
+        private async void tsbRun_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Console.SetOut(new TextControlWriter(tbConsole));
+                tabControl1.SelectedIndex = 1;
+                await _engine.ExecuteAsync();                
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
+            }
+            finally
+            {
+                Console.SetOut(Console.Out);
+            }
+        }
     }
 }
