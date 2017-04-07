@@ -17,13 +17,13 @@ namespace AzDeployLib
                     <td>{LocalTime.ToShortDateString()}</td>
                     <td>{Version}</td>
                     <td>
-                        <ul>{Files.Select(fv => $"<span>{fv.Filename}</span><span> - </span><span>{fv.Version}</span>")}</ul>
+                        <ul>{string.Join("", Files.Select(fv => $"<li><span>{fv.Filename}</span><span> - </span><span>{fv.Version}</span></li>"))}</ul>
                     </td>
                 </tr>";
 
             XmlDocument temp = new XmlDocument();
-            temp.LoadXml(template);
-            return temp.DocumentElement;
+            temp.LoadXml(template);            
+            return doc.ImportNode(temp.DocumentElement, true);
         }
     }
 }

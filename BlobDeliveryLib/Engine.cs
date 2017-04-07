@@ -171,15 +171,16 @@ namespace AzDeployLib
                 const int logCount = 50;
                 
                 IEnumerable<UploadLogEntry> entries = GetChangeLogEntries();
-
-                // generate html output from the last 50
+                
                 string htmlFile = BuildHtmlFromEntries(entries.Take(logCount));
-
-                // upload html output
-
-
-                // delete log entries after the last 50
+                
+                var container = GetContainer();
+                var logBlob = container.GetBlockBlobReference(Path.GetFileName(htmlFile));
+                logBlob.UploadFromFile(htmlFile);
+                File.Delete(htmlFile);
+                
                 var deleteEntries = entries.Skip(logCount);
+                //todo: delete entries
             });
         }
 
@@ -197,7 +198,7 @@ namespace AzDeployLib
 
             foreach (var entry in entries)
             {
-                ndTitle.AppendChild(entry.ToXhtml(doc));
+                ndTable.AppendChild(entry.ToXhtml(doc));
             }
 
             string fileName = Path.Combine(Path.GetTempPath(), ProductName + ".ChangeLog.html");
@@ -222,7 +223,7 @@ namespace AzDeployLib
             List<UploadLogEntry> results = new List<UploadLogEntry>();
 
             var container = GetContainer();
-            var logEntries = container.ListBlobs(prefix: ProductName.Trim(), useFlatBlobListing: true, blobListingDetails: BlobListingDetails.None);
+            var logEntries = container.ListBlobs(prefix: ProductName.Trim() + "/", useFlatBlobListing: true, blobListingDetails: BlobListingDetails.None);
             foreach (var entry in logEntries)
             {
                 results.Add(AzureXmlSerializerHelper.Download<UploadLogEntry>(entry.Uri));
