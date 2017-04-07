@@ -1,6 +1,7 @@
 ﻿using AdamOneilSoftware;
 using AzDeployLib;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
@@ -32,6 +33,7 @@ namespace AzDeployUI
                 tsbSave.Enabled = true;
                 tsbRun.Enabled = true;
                 tsbAddToProject.Enabled = true;
+                tsbChangeLog.Enabled = true;
             }
             catch (Exception exc)
             {
@@ -53,6 +55,7 @@ namespace AzDeployUI
                     tsbSave.Enabled = true;
                     tsbRun.Enabled = true;
                     tsbAddToProject.Enabled = true;
+                    tsbChangeLog.Enabled = true;
                 }
             }
             catch (Exception exc)
@@ -227,6 +230,20 @@ namespace AzDeployUI
             if (dlg.ShowDialog() == DialogResult.OK)
             {
                 _options.AzDeployPath = dlg.FileName;
+            }
+        }
+
+        private void tsbChangeLog_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ProcessStartInfo psi = new ProcessStartInfo(_engine.ChangeLogUrl);
+                psi.UseShellExecute = true;
+                Process.Start(psi);
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
             }
         }
     }

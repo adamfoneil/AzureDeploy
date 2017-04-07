@@ -80,6 +80,12 @@ namespace AzDeployLib
         [Description("Container in which your installer executable is uploaded")]
         public string ContainerName { get { return Get<string>(); } set { Set(value); } }
 
+        [Browsable(false)]
+        public string ChangeLogUrl
+        {
+            get { return new BlobUri(StorageAccountName, ContainerName, GetChangeLogFilename()).ToString();  }
+        }
+
         public Engine()
         {
             InstallerSuccessCode = -1;
@@ -177,6 +183,9 @@ namespace AzDeployLib
                 var container = GetContainer();
                 var logBlob = container.GetBlockBlobReference(Path.GetFileName(htmlFile));
                 logBlob.UploadFromFile(htmlFile);
+                // thanks to http://stackoverflow.com/questions/24621664/uploading-blockblob-and-setting-contenttype
+                logBlob.Properties.ContentType = "text/html";
+                logBlob.SetProperties();
                 File.Delete(htmlFile);
                 
                 var deleteEntries = entries.Skip(logCount);
@@ -201,9 +210,14 @@ namespace AzDeployLib
                 ndTable.AppendChild(entry.ToXhtml(doc));
             }
 
-            string fileName = Path.Combine(Path.GetTempPath(), ProductName + ".ChangeLog.html");
+            string fileName = Path.Combine(Path.GetTempPath(), GetChangeLogFilename());
             doc.Save(fileName);
             return fileName;
+        }
+
+        private string GetChangeLogFilename()
+        {
+            return ProductName.Trim() + ".ChangeLog.html";
         }
 
         private XmlDocument GetEmbeddedDocument(string resourceName)
@@ -247,11 +261,6 @@ namespace AzDeployLib
             CloudBlobContainer container = client.GetContainerReference(ContainerName);
             container.CreateIfNotExists();
             return container;
-        }
-
-        private BlobUri ChangeLogUri()
-        {
-            return BlobUriBase("ChangeLog");
         }
 
         private BlobUri VersionInfoUri()
