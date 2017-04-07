@@ -133,7 +133,7 @@ namespace AzDeployUI
                     SelectAzDeployPath();
                 }
 
-                if (MessageBox.Show("This will add a post-build event call to CloudDeploy.exe using this script. You will select a .csproj file next.", "Add To Project", MessageBoxButtons.OKCancel) == DialogResult.OK)
+                if (MessageBox.Show("This will add a post-build event call to AzDeploy.exe using this script. You will select a .csproj file next.", "Add To Project", MessageBoxButtons.OKCancel) == DialogResult.OK)
                 {
                     OpenFileDialog dlg = new OpenFileDialog();
                     dlg.Filter = "Visual Studio Project Files|*.csproj|All Files|*.*";
@@ -171,7 +171,7 @@ namespace AzDeployUI
                     elPropertyGroup.AppendChild(ndPostBuild);
                 }
 
-                ndPostBuild.InnerText = $"\"{_options.AzDeployPath}\" \"{FileSystem.GetRelativePath(projectFile, deployScript)}\"";
+                ndPostBuild.InnerText = $"\"{_options.AzDeployPath}\" \"{FileSystem.GetRelativePath(Path.Combine(_engine.StagingFolder, _engine.ProductVersionFile), deployScript)}\"";
 
                 doc.Save(projectFile);
             }
