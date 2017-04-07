@@ -7,6 +7,9 @@
 *.userosscache
 *.sln.docstates
 
+# engine scripts
+*.deploy.xml
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
