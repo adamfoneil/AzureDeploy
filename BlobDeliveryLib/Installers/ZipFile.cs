@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 
-namespace CloudDeployLib.Installers
+namespace AzDeployLib.Installers
 {
     public class ZipFile : IInstaller
     {
         public void Run(Engine engine)
         {
-            throw new NotImplementedException();
+            string outputFile = Path.GetFullPath(engine.InstallerOutput);
+            if (File.Exists(outputFile)) File.Delete(outputFile);
+            System.IO.Compression.ZipFile.CreateFromDirectory(engine.StagingFolder, engine.InstallerOutput, System.IO.Compression.CompressionLevel.Optimal, false);
         }
     }
 }

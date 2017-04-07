@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CloudDeployLib
+namespace AzDeployLib
 {
     public class FileVersion
     {
@@ -20,5 +20,12 @@ namespace CloudDeployLib
 
     public class FileVersionList : List<FileVersion>
     {
+        public FileVersionList()
+        {
+        }
+
+        public FileVersionList(IEnumerable<FileVersion> versions) : base(versions)
+        {
+        }
     }
 }

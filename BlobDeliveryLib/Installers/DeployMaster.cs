@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace CloudDeployLib.Installers
+namespace AzDeployLib.Installers
 {
     public class DeployMaster : Process
     {

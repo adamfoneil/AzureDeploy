@@ -1,4 +1,4 @@
-﻿using CloudDeployLib;
+﻿using AzDeployLib;
 using System;
 using System.IO;
 
@@ -10,9 +10,9 @@ namespace AzDeploy
         {
             try
             {
-                if (args.Length != 1) throw new InvalidOperationException("CloudDeploy.exe: script file argument is required.");
+                if (args.Length != 1) throw new InvalidOperationException("AzDeploy.exe: script file argument is required.");
                 string script = Path.GetFullPath(args[0]);
-                if (!File.Exists(script)) throw new FileNotFoundException($"CloudDeploy.exe: script file {script} not found.");
+                if (!File.Exists(script)) throw new FileNotFoundException($"AzDeploy.exe: script file {script} not found.");
 
                 Engine e = Engine.Load(script);
                 // thanks to http://stackoverflow.com/questions/13002507/how-can-i-call-async-go-method-in-for-example-main, answer by Tim S

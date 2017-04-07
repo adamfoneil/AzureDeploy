@@ -1,5 +1,5 @@
 ﻿using AdamOneilSoftware;
-using CloudDeployLib;
+using AzDeployLib;
 using System;
 using System.IO;
 using System.Windows.Forms;
@@ -29,6 +29,9 @@ namespace AzDeployUI
                 _engine = new Engine();
                 _engine.FilenamePrompt = PromptFilename;
                 propertyGrid1.SelectedObject = _engine;
+                tsbSave.Enabled = true;
+                tsbRun.Enabled = true;
+                tsbAddToProject.Enabled = true;
             }
             catch (Exception exc)
             {
@@ -165,7 +168,7 @@ namespace AzDeployUI
                     elPropertyGroup.AppendChild(ndPostBuild);
                 }
 
-                ndPostBuild.InnerText = $"{_options.AzDeployPath} \"{FileSystem.GetRelativePath(projectFile, deployScript)}\"";
+                ndPostBuild.InnerText = $"\"{_options.AzDeployPath}\" \"{FileSystem.GetRelativePath(projectFile, deployScript)}\"";
 
                 doc.Save(projectFile);
             }

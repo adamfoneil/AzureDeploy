@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Engine xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <StagingFolder>C:\Users\Adam\Dropbox\Visual Studio 2015\Projects\AoDeliver\CloudDeployUI\bin\Release</StagingFolder>
+  <ProductName>AzDeploy</ProductName>
+  <ProductVersionFile>AzDeployUI.exe</ProductVersionFile>
+  <Type>ZipFile</Type>
+  <InstallerSuccessCode>-1</InstallerSuccessCode>
+  <InstallerOutput>AzDeploy.zip</InstallerOutput>
+  <StorageAccountName>adamosoftware</StorageAccountName>
+  <StorageAccountKey>gSJlhScBOAskz9tIM+iUbxYwNozSjR26D+PFLULOmWSE1OoRKwwUO1kyS4kzuwuRjrTwMIori/9lG2+jRZMRRQ==</StorageAccountKey>
+  <ContainerName>install</ContainerName>
+</Engine>
