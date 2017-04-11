@@ -69,6 +69,7 @@ namespace AzDeployUI
             try
             {
                 _engine.Save();
+                this.Text = $"Cloud Deployer - {_engine.Filename}";
             }
             catch (Exception exc)
             {

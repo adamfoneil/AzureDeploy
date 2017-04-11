@@ -34,6 +34,10 @@
       <HintPath>..\packages\AoAzureXmlSerializer.1.0.4\lib\net461\AzureXmlSerializer.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="FileSystemLib, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\AoFileSystemLib.1.0.3\lib\net461\FileSystemLib.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Azure.KeyVault.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Azure.KeyVault.Core.1.0.0\lib\net40\Microsoft.Azure.KeyVault.Core.dll</HintPath>
       <Private>True</Private>
@@ -78,6 +82,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Installers\BuildOutputZipFile.cs" />
     <Compile Include="Installers\DeployMaster.cs" />
     <Compile Include="Installers\Process.cs" />
     <Compile Include="Engine.cs" />
@@ -92,6 +97,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\LogTemplate.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

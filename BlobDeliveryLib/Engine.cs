@@ -19,7 +19,8 @@ namespace AzDeployLib
     {
         Process,
         ZipFile,
-        DeployMasterProcess
+        DeployMasterProcess,
+        BuildOutputZipFile
     }
 
     public class Engine : Document
@@ -28,7 +29,8 @@ namespace AzDeployLib
         {
             { InstallType.Process, new Installers.Process() },
             { InstallType.ZipFile, new ZipFile() },
-            { InstallType.DeployMasterProcess, new DeployMaster() }
+            { InstallType.DeployMasterProcess, new DeployMaster() },
+            { InstallType.BuildOutputZipFile, new BuildOutputZipFile() }
         };        
 
         [Category("Product")]
