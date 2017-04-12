@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace AzDeployLib.Installers
+namespace AzDeploy.Server.Installers
 {
     public class Process : IInstaller
     {

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AzDeployLib.Installers
+namespace AzDeploy.Server.Installers
 {
     public class BuildOutputZipFile : ZipFile
     {

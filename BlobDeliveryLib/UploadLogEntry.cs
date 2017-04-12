@@ -2,13 +2,13 @@
 using System.Xml;
 using System.Linq;
 
-namespace AzDeployLib
+namespace AzDeploy.Server
 {
     public class UploadLogEntry
     {
         public string Version { get; set; }
         public DateTime LocalTime { get; set; }
-        public FileVersionList Files { get; set; }
+        public Common.FileVersionList Files { get; set; }
 
         public XmlNode ToXhtml(XmlDocument doc)
         {

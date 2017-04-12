@@ -2,7 +2,7 @@
 using System.IO;
 using System.IO.Compression;
 
-namespace AzDeployLib.Installers
+namespace AzDeploy.Server.Installers
 {
     public class ZipFile : IInstaller
     {

@@ -1,5 +1,5 @@
 ﻿using AdamOneilSoftware;
-using AzDeployLib.Installers;
+using AzDeploy.Server.Installers;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Blob;
@@ -13,7 +13,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace AzDeployLib
+namespace AzDeploy.Server
 {
     public enum InstallType
     {
@@ -47,7 +47,7 @@ namespace AzDeployLib
 
         public string GetProductVersion()
         {
-            return LocalVersion(Path.Combine(Path.GetFullPath(StagingFolder), ProductVersionFile)).ToString();
+            return Common.Utilities.GetLocalVersion(Path.Combine(Path.GetFullPath(StagingFolder), ProductVersionFile)).ToString();
         }
 
         [Category("Installer")]
@@ -99,10 +99,10 @@ namespace AzDeployLib
         }
 
         public async Task ExecuteAsync()
-        {            
-            var localFileInfo = GetLocalVersions();            
-            var cloudFileInfo = GetCloudVersions();
-            IEnumerable<FileVersion> versions = null;
+        {
+            var localFileInfo = Common.Utilities.GetLocalVersions(StagingFolder);
+            var cloudFileInfo = Common.Utilities.GetCloudVersions(StorageAccountName, ContainerName, ProductName);
+            IEnumerable<Common.FileVersion> versions = null;
 
             bool newVersionAvailable = false;
             string newVersionInfo = null;
@@ -150,14 +150,14 @@ namespace AzDeployLib
                 await UploadInstallerAsync(version);
 
                 Console.WriteLine("AzDeploy: uploading new version info...");
-                var versionInfoList = new FileVersionList();
+                var versionInfoList = new Common.FileVersionList();
                 versionInfoList.AddRange(localFileInfo);                
-                AzureXmlSerializerHelper.Upload(versionInfoList, VersionInfoUri(), StorageAccountKey);
+                AzureXmlSerializerHelper.Upload(versionInfoList, Common.Utilities.VersionInfoUri(StorageAccountName, ContainerName, ProductName), StorageAccountKey);
 
                 Console.WriteLine("AzDeploy: uploading log entry...");
                 UploadLogEntry entry = new UploadLogEntry();
                 entry.LocalTime = DateTime.Now;
-                entry.Files = new FileVersionList(versions);
+                entry.Files = new Common.FileVersionList(versions);
                 entry.Version = version;
                 AzureXmlSerializerHelper.Upload(entry, UploadLogUri(), StorageAccountKey);
 
@@ -197,7 +197,7 @@ namespace AzDeployLib
 
         private string BuildHtmlFromEntries(IEnumerable<UploadLogEntry> entries)
         {
-            XmlDocument doc = GetEmbeddedDocument("AzDeployLib.Resources.LogTemplate.html");
+            XmlDocument doc = GetEmbeddedDocument("AzDeploy.Server.Resources.LogTemplate.html");
 
             XmlNode ndTitle = doc.SelectSingleNode("/html/head/title");
             ndTitle.InnerText = $"{ProductName} Change Log";
@@ -265,51 +265,11 @@ namespace AzDeployLib
             return container;
         }
 
-        private BlobUri VersionInfoUri()
-        {
-            return BlobUriBase("VersionInfo");            
-        }
-
         private BlobUri UploadLogUri()
         {
-            return BlobUriBase(DateTime.UtcNow.ToString("yyyy-MM-dd_HH-mm"), ProductName.Trim());
+            return Common.Utilities.BlobUriBase(
+                StorageAccountName, ContainerName, ProductName, 
+                DateTime.UtcNow.ToString("yyyy-MM-dd_HH-mm"), ProductName.Trim());
         }
-
-        private BlobUri BlobUriBase(string suffix, string folder = null)
-        {
-            string baseName = ProductName.Trim();
-            if (!string.IsNullOrEmpty(folder)) baseName = folder + "/" + baseName;
-            return new BlobUri(StorageAccountName, ContainerName, baseName + $".{suffix}.xml");
-        }
-
-        private IEnumerable<FileVersion> GetCloudVersions()
-        {
-            var uri = VersionInfoUri();            
-            FileVersionList result = null;
-            if (uri.Exists())
-            {
-                result = AzureXmlSerializerHelper.Download<FileVersionList>(uri);
-            }
-            else
-            {
-                result = new FileVersionList();
-            }
-            return result;
-        }
-
-        private IEnumerable<FileVersion> GetLocalVersions()
-        {
-            string[] masks = new string[] { "*.exe", "*.dll" };
-            return masks.SelectMany(mask =>
-                Directory.GetFiles(StagingFolder, mask)
-                .Where(f => !f.EndsWith("vshost.exe"))
-                .Select(f => new FileVersion() { Filename = Path.GetFileName(f), Version = LocalVersion(f).ToString() }));
-        }
-
-        private static Version LocalVersion(string fileName)
-        {
-            var fv = FileVersionInfo.GetVersionInfo(fileName);
-            return new Version(fv.FileVersion);
-        }        
     }
 }

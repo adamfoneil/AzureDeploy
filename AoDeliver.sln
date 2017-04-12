@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudDeployLib", "BlobDeliv
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudDeployUI", "CloudDeployUI\CloudDeployUI.csproj", "{0DCA65D4-096F-4EB4-A1BB-885610E31C2D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientLib", "ClientLib\ClientLib.csproj", "{E039C488-F67F-449A-9ED7-CE0BE189318F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonLib", "CommonLib\CommonLib.csproj", "{CE47C9C6-7141-4D2D-AAC1-573F4F8D8FDF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{0DCA65D4-096F-4EB4-A1BB-885610E31C2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0DCA65D4-096F-4EB4-A1BB-885610E31C2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0DCA65D4-096F-4EB4-A1BB-885610E31C2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E039C488-F67F-449A-9ED7-CE0BE189318F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E039C488-F67F-449A-9ED7-CE0BE189318F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E039C488-F67F-449A-9ED7-CE0BE189318F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E039C488-F67F-449A-9ED7-CE0BE189318F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE47C9C6-7141-4D2D-AAC1-573F4F8D8FDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE47C9C6-7141-4D2D-AAC1-573F4F8D8FDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE47C9C6-7141-4D2D-AAC1-573F4F8D8FDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE47C9C6-7141-4D2D-AAC1-573F4F8D8FDF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
