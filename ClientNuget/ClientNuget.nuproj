@@ -28,7 +28,8 @@
     <ReleaseNotes>
     </ReleaseNotes>
     <ProjectUrl>https://github.com/adamosoftware/AzureDeploy</ProjectUrl>
-    <LicenseUrl>https://github.com/adamosoftware/AzureDeploy</LicenseUrl>
+    <LicenseUrl>
+    </LicenseUrl>
     <Copyright>Copyright © Adam O'Neil Software 2017</Copyright>
     <Tags>azure-storage continuous-delivery winforms</Tags>
   </PropertyGroup>
