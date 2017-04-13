@@ -27,4 +27,4 @@ Use its `InstallManager` class like this:
     var im = new InstallManager(*storage account*, *container*, *installerExe*, *productName*);
     await im.AutoInstallAsync();
 
-The `installerExe` should be the case-sensitive same value in your [Engine.InstallerOutput](https://github.com/adamosoftware/AzureDeploy/blob/master/BlobDeliveryLib/Engine.cs#L79)
+The `installerExe` should be the case-sensitive same value in your [Engine.InstallerOutput](https://github.com/adamosoftware/AzureDeploy/blob/master/BlobDeliveryLib/Engine.cs#L71). The `productName` should be the same as [Engine.ProductName](https://github.com/adamosoftware/AzureDeploy/blob/master/BlobDeliveryLib/Engine.cs#L42).
