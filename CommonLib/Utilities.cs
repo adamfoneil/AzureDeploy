@@ -39,6 +39,11 @@ namespace AzDeploy.Common
         public static IEnumerable<FileVersion> GetCloudVersions(string storageAccount, string containerName, string productName)
         {
             var uri = VersionInfoUri(storageAccount, containerName, productName);
+            return GetCloudVersions(uri);
+        }
+
+        public static IEnumerable<FileVersion> GetCloudVersions(BlobUri uri)
+        {
             FileVersionList result = null;
             if (uri.Exists())
             {
