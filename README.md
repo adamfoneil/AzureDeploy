@@ -20,7 +20,11 @@ To use AzDeploy, you would follow these general steps:
 
 3. As you develop and build project, any time you increment a version number of the project or any constituent part of it, AzDeploy should build a new installer and upload it to blob storage.
 
-4. If you want your end user application to be able to detect and download later versions of itself, install package **AzDeployClient** and use its `InstallManager` class like this:
+4. If you want your end user application to be able to detect and download later versions of itself, install package **AzDeployClient**.
+
+Use its `InstallManager` class like this:
 
     var im = new InstallManager(*storage account*, *container*, *installerExe*, *productName*);
     await im.AutoInstallAsync();
+
+The `installerExe` should be the case-sensitive same value in your [Engine.InstallerOutput](https://github.com/adamosoftware/AzureDeploy/blob/master/BlobDeliveryLib/Engine.cs#L79)
