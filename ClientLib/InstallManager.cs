@@ -39,7 +39,7 @@ namespace AzDeploy.Client
             // any where the versions increased
             results.AddRange(
                 from cloud in cloudVersions
-                join local in localVersions on cloud.Filename equals local.Filename
+                join local in localVersions on cloud.Filename.ToLower() equals local.Filename.ToLower()
                 where cloud.GetVersion() > local.GetVersion()
                 select cloud);
 
@@ -77,14 +77,24 @@ namespace AzDeploy.Client
             throw new OperationCanceledException("User canceled out of Save dialog.");
         }
 
-        public async Task DownloadAndExecuteAsync()
+        /// <summary>
+        /// Checks to see if a new version is available. If so, the installer is downloaded, executed, and the current application exits.
+        /// </summary>        
+        public async Task AutoInstallAsync(bool prompt = false)
         {
             if (await IsNewVersionAvailableAsync())
             {
+                if (prompt)
+                {
+                    if (MessageBox.Show(
+                        "A new version is available. Click OK to download and install it.", "New Version Available", 
+                        MessageBoxButtons.OKCancel) == DialogResult.Cancel) return;
+                }
+                
                 string localFile = await DownloadAsync();
                 ProcessStartInfo psi = new ProcessStartInfo(localFile);
                 Process.Start(psi);
-                Application.Exit();
+                Application.Exit();                
             }
         }
     }
