@@ -10,7 +10,7 @@ There are four components of my solution:
 
 - **AzDeployLib.dll**, the deployment logic shared by both the UI and console app. See [BlobDeliveryLib](https://github.com/adamosoftware/AzureDeploy/tree/master/BlobDeliveryLib)
 
-- **AzDeployClient.dll**, a client-side library applications can use to determine if a new version of an app is available. Install this via Nuget package **AzDeployClient**.
+- **AzDeployClient.dll**, a client-side library applications can use to determine if a new version of an app is available. Install this via Nuget package **AoAzureDeployClient**.
 
 To use AzDeploy, you would follow these general steps:
 
@@ -20,7 +20,7 @@ To use AzDeploy, you would follow these general steps:
 
 3. As you develop and build project, any time you increment a version number of the project or any constituent part of it, AzDeploy should build a new installer and upload it to blob storage.
 
-4. If you want your end user application to be able to detect and download later versions of itself, install package **AzDeployClient**.
+4. If you want your end user application to be able to detect and download later versions of itself, install package **AoAzureDeployClient**.
 
 Use its `InstallManager` class like this:
 
