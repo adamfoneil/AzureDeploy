@@ -19,6 +19,8 @@ namespace AzDeploy.Client
         private readonly string _productName;
         private readonly string _installerExe;
 
+        public IEnumerable<FileVersion> NewComponents { get; set; }        
+
         public InstallManager(string storageAccount, string containerName, string installerExe, string productName)
         {
             _installerUri = new BlobUri(storageAccount, containerName, installerExe);
@@ -27,12 +29,12 @@ namespace AzDeploy.Client
             _installerExe = installerExe;
         }
 
-        public IEnumerable<FileVersion> GetNewComponents()
+        public async Task<IEnumerable<FileVersion>> GetNewComponentsAsync()
         {
-            var localVersions = Utilities.GetLocalVersions(Assembly.GetExecutingAssembly().Location);
-            var cloudVersions = Utilities.GetCloudVersions(_versionInfoUri);
-
             List<FileVersion> results = new List<FileVersion>();
+
+            var localVersions = Utilities.GetLocalVersions(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+            var cloudVersions = await Utilities.GetCloudVersionsAsync(_versionInfoUri);
 
             // any where the versions increased
             results.AddRange(
@@ -44,12 +46,14 @@ namespace AzDeploy.Client
             // any new cloud files not in local
             results.AddRange(cloudVersions.Where(cv => !localVersions.Any(lv => lv.Filename.Equals(cv.Filename))));
 
+            NewComponents = results;
             return results;
         }
 
-        public bool IsNewVersionAvailable()
+        public async Task<bool> IsNewVersionAvailableAsync()
         {
-            return GetNewComponents().Any();            
+            var result = await GetNewComponentsAsync();
+            return result.Any();
         }
 
         public async Task<string> DownloadAsync(bool promptForLocation = false)
@@ -75,7 +79,7 @@ namespace AzDeploy.Client
 
         public async Task DownloadAndExecuteAsync()
         {
-            if (IsNewVersionAvailable())
+            if (await IsNewVersionAvailableAsync())
             {
                 string localFile = await DownloadAsync();
                 ProcessStartInfo psi = new ProcessStartInfo(localFile);

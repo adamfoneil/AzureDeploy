@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace AzDeploy.Common
 {
@@ -40,6 +41,20 @@ namespace AzDeploy.Common
         {
             var uri = VersionInfoUri(storageAccount, containerName, productName);
             return GetCloudVersions(uri);
+        }
+
+        public static async Task<IEnumerable<FileVersion>> GetCloudVersionsAsync(BlobUri uri)
+        {
+            FileVersionList result = null;
+            if (uri.Exists())
+            {
+                result = await AzureXmlSerializerHelper.DownloadAsync<FileVersionList>(uri);
+            }
+            else
+            {
+                result = new FileVersionList();
+            }
+            return result;
         }
 
         public static IEnumerable<FileVersion> GetCloudVersions(BlobUri uri)
