@@ -15,14 +15,39 @@ namespace AzDeploy.Common
             string[] masks = new string[] { "*.exe", "*.dll" };
             return masks.SelectMany(mask =>
                 Directory.GetFiles(folder, mask)
-                .Where(f => !f.EndsWith("vshost.exe"))
-                .Select(f => new FileVersion() { Filename = Path.GetFileName(f), Version = GetLocalVersion(f).ToString() }));
+                .Where(f => !f.EndsWith("vshost.exe") && HasVersionInfo(f))
+                .Select(f => new FileVersion()
+                {
+                    Filename = Path.GetFileName(f),
+                    Version = GetLocalVersion(f).ToString()
+                }));
+        }
+
+        private static bool HasVersionInfo(string fileName)
+        {
+            try
+            {
+                var fv = FileVersionInfo.GetVersionInfo(fileName);
+                var version = new Version(fv.FileVersion);
+                return true;
+            }
+            catch 
+            {
+                return false;
+            }
         }
 
         public static Version GetLocalVersion(string fileName)
         {
-            var fv = FileVersionInfo.GetVersionInfo(fileName);
-            return new Version(fv.FileVersion);
+            try
+            {
+                var fv = FileVersionInfo.GetVersionInfo(fileName);
+                return new Version(fv.FileVersion);
+            }
+            catch (Exception exc)
+            {
+                throw new Exception($"Failed to get version info from {fileName}: {exc.Message}");
+            }
         }
 
         public static BlobUri VersionInfoUri(string storageAccount, string containerName, string productName)
