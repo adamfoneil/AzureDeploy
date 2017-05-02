@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using AzTrace;
 
 namespace AzDeploy.Common
 {
@@ -46,6 +47,7 @@ namespace AzDeploy.Common
             }
             catch (Exception exc)
             {
+                Trace.WriteLine(new CallInfo(exc, new { fileName = fileName }));
                 throw new Exception($"Failed to get version info from {fileName}: {exc.Message}");
             }
         }
