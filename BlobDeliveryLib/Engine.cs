@@ -71,6 +71,10 @@ namespace AzDeploy.Server
         public string InstallerOutput { get { return Get<string>(); } set { Set(value); } }
 
         [Category("Blob Storage")]
+        [Description("Local filename where storage credentials can be found (use this to keep credentials out of source control)")]
+        public string LocalCredentialSource {  get { return Get<string>(); } set { Set(value); } }
+
+        [Category("Blob Storage")]
         [Description("Storage account name")]
         public string StorageAccountName { get { return Get<string>(); } set { Set(value); } }
 
@@ -141,6 +145,8 @@ namespace AzDeploy.Server
 
             if (newVersionAvailable)
             {
+                var creds = GetAzureCredentials();
+
                 Console.WriteLine(newVersionInfo);
                 Console.WriteLine("AzDeploy: building installer...");
                 _installers[Type].Run(this);
@@ -152,14 +158,14 @@ namespace AzDeploy.Server
                 Console.WriteLine("AzDeploy: uploading new version info...");
                 var versionInfoList = new Common.FileVersionList();
                 versionInfoList.AddRange(localFileInfo);                
-                AzureXmlSerializerHelper.Upload(versionInfoList, Common.Utilities.VersionInfoUri(StorageAccountName, ContainerName, ProductName), StorageAccountKey);
+                AzureXmlSerializerHelper.Upload(versionInfoList, Common.Utilities.VersionInfoUri(creds.AccountName, ContainerName, ProductName), creds.AccountKey);
 
                 Console.WriteLine("AzDeploy: uploading log entry...");
                 UploadLogEntry entry = new UploadLogEntry();
                 entry.LocalTime = DateTime.Now;
                 entry.Files = new Common.FileVersionList(versions);
                 entry.Version = version;
-                AzureXmlSerializerHelper.Upload(entry, UploadLogUri(), StorageAccountKey);
+                AzureXmlSerializerHelper.Upload(entry, UploadLogUri(), creds.AccountKey);
 
                 Console.WriteLine("AzDeploy: generating log html");
                 await BuildUpdateLogAsync();
@@ -258,7 +264,8 @@ namespace AzDeploy.Server
 
         private CloudBlobContainer GetContainer()
         {
-            CloudStorageAccount acct = new CloudStorageAccount(new StorageCredentials(StorageAccountName, StorageAccountKey), true);
+            var creds = GetAzureCredentials();
+            CloudStorageAccount acct = new CloudStorageAccount(new StorageCredentials(creds.AccountName, creds.AccountKey), true);
             CloudBlobClient client = acct.CreateCloudBlobClient();
             CloudBlobContainer container = client.GetContainerReference(ContainerName);
             container.CreateIfNotExists();
@@ -270,6 +277,33 @@ namespace AzDeploy.Server
             return Common.Utilities.BlobUriBase(
                 StorageAccountName, ContainerName, ProductName, 
                 DateTime.UtcNow.ToString("yyyy-MM-dd_HH-mm"), ProductName.Trim());
+        }
+
+        private AzureCredentials GetAzureCredentials()
+        {
+            AzureCredentials result = null;
+            if (File.Exists(LocalCredentialSource))
+            {
+                result = XmlSerializerHelper.Load<AzureCredentials>(LocalCredentialSource);
+            }
+            else
+            {
+                result = new AzureCredentials() { AccountKey = StorageAccountKey, AccountName = StorageAccountName };
+            }
+
+            return result;            
+        }
+
+        public void SaveLocalCredentials()
+        {
+            var creds = new AzureCredentials() { AccountName = StorageAccountName, AccountKey = StorageAccountKey };
+            XmlSerializerHelper.Save(creds, LocalCredentialSource);
+        }
+
+        public class AzureCredentials
+        {
+            public string AccountName { get; set; }
+            public string AccountKey { get; set; }
         }
     }
 }
