@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2006
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AoDeliver", "AoDeliver\AoDeliver.csproj", "{976A608A-F4EA-4521-AF69-2021BD68EC6A}"
 EndProject
@@ -14,8 +14,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonLib", "CommonLib\CommonLib.csproj", "{CE47C9C6-7141-4D2D-AAC1-573F4F8D8FDF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{E71AEF1D-D449-481D-9297-15DA33437E5D}"
-EndProject
-Project("{FF286327-C783-4F7A-AB73-9BCBAD0D4460}") = "ClientNuget", "ClientNuget\ClientNuget.nuproj", "{7B35CD82-1C3F-43B1-887A-B3868E693D33}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,12 +45,11 @@ Global
 		{E71AEF1D-D449-481D-9297-15DA33437E5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E71AEF1D-D449-481D-9297-15DA33437E5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E71AEF1D-D449-481D-9297-15DA33437E5D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7B35CD82-1C3F-43B1-887A-B3868E693D33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7B35CD82-1C3F-43B1-887A-B3868E693D33}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7B35CD82-1C3F-43B1-887A-B3868E693D33}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7B35CD82-1C3F-43B1-887A-B3868E693D33}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {951B1E14-00CA-4912-B6B0-C96C931C530F}
 	EndGlobalSection
 EndGlobal
