@@ -34,6 +34,7 @@ namespace AzDeployUI
                 tsbRun.Enabled = true;
                 tsbAddToProject.Enabled = true;
                 tsbChangeLog.Enabled = true;
+                tsbSaveLocalCredentials.Enabled = true;
             }
             catch (Exception exc)
             {
@@ -56,6 +57,7 @@ namespace AzDeployUI
                     tsbRun.Enabled = true;
                     tsbAddToProject.Enabled = true;
                     tsbChangeLog.Enabled = true;
+                    tsbSaveLocalCredentials.Enabled = true;
                 }
             }
             catch (Exception exc)
@@ -241,6 +243,22 @@ namespace AzDeployUI
                 ProcessStartInfo psi = new ProcessStartInfo(_engine.ChangeLogUrl);
                 psi.UseShellExecute = true;
                 Process.Start(psi);
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
+            }
+        }
+
+        private void tsbSaveLocalCredentials_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                frmAzureCreds dlg = new frmAzureCreds();
+                if (dlg.ShowDialog() == DialogResult.OK)
+                {
+                    _engine.LocalCredentialSource = dlg.Filename;
+                }
             }
             catch (Exception exc)
             {

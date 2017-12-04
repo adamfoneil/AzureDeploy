@@ -21,6 +21,7 @@ namespace AzDeploy
             catch (Exception exc)
             {
                 Console.WriteLine(exc.Message);
+                Console.ReadLine();
             }
         }
     }

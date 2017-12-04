@@ -34,7 +34,7 @@ namespace AzDeploy.Server
         };        
 
         [Category("Product")]
-        [Description("Local folder, typically bin/Release, where the installer gets component files")]
+        [Description("Local folder, typically bin/Release (use the full path), where the installer gets component files")]
         public string StagingFolder { get { return Get<string>(); } set { Set(value); } }
 
         [Category("Product")]
@@ -42,7 +42,7 @@ namespace AzDeploy.Server
         public string ProductName { get { return Get<string>(); } set { Set(value); } }
 
         [Category("Product")]
-        [Description("EXE or DLL that defines the version number for the product as a whole")]
+        [Description("EXE or DLL that defines the version number for the product as a whole (use only the file name without the path, must be within StagingFolder)")]
         public string ProductVersionFile { get { return Get<string>(); } set { Set(value); } }
 
         public string GetProductVersion()
@@ -89,7 +89,11 @@ namespace AzDeploy.Server
         [Browsable(false)]
         public string ChangeLogUrl
         {
-            get { return new BlobUri(StorageAccountName, ContainerName, GetChangeLogFilename()).ToString();  }
+            get
+            {
+                var creds = GetAzureCredentials();
+                return new BlobUri(creds.AccountName, ContainerName, GetChangeLogFilename()).ToString();
+            }
         }
 
         public Engine()
@@ -104,8 +108,10 @@ namespace AzDeploy.Server
 
         public async Task ExecuteAsync()
         {
+            var creds = GetAzureCredentials();
+
             var localFileInfo = Common.Utilities.GetLocalVersions(StagingFolder);
-            var cloudFileInfo = Common.Utilities.GetCloudVersions(StorageAccountName, ContainerName, ProductName);
+            var cloudFileInfo = Common.Utilities.GetCloudVersions(creds.AccountName, ContainerName, ProductName);
             IEnumerable<Common.FileVersion> versions = null;
 
             bool newVersionAvailable = false;
@@ -145,8 +151,6 @@ namespace AzDeploy.Server
 
             if (newVersionAvailable)
             {
-                var creds = GetAzureCredentials();
-
                 Console.WriteLine(newVersionInfo);
                 Console.WriteLine("AzDeploy: building installer...");
                 _installers[Type].Run(this);
@@ -274,8 +278,9 @@ namespace AzDeploy.Server
 
         private BlobUri UploadLogUri()
         {
+            var creds = GetAzureCredentials();
             return Common.Utilities.BlobUriBase(
-                StorageAccountName, ContainerName, ProductName, 
+                creds.AccountName, ContainerName, ProductName, 
                 DateTime.UtcNow.ToString("yyyy-MM-dd_HH-mm"), ProductName.Trim());
         }
 

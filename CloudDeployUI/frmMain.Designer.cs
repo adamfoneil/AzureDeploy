@@ -36,12 +36,13 @@
             this.tsbRun = new System.Windows.Forms.ToolStripButton();
             this.tsbAddToProject = new System.Windows.Forms.ToolStripButton();
             this.btnAzDeployPath = new System.Windows.Forms.ToolStripButton();
+            this.tsbChangeLog = new System.Windows.Forms.ToolStripButton();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tbConsole = new System.Windows.Forms.TextBox();
-            this.tsbChangeLog = new System.Windows.Forms.ToolStripButton();
+            this.tsbSaveLocalCredentials = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -57,10 +58,11 @@
             this.tsbRun,
             this.tsbAddToProject,
             this.btnAzDeployPath,
-            this.tsbChangeLog});
+            this.tsbChangeLog,
+            this.tsbSaveLocalCredentials});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(567, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(619, 25);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -125,12 +127,23 @@
             this.btnAzDeployPath.Text = "AzDeploy.exe Path";
             this.btnAzDeployPath.Click += new System.EventHandler(this.btnAzDeployPath_Click);
             // 
+            // tsbChangeLog
+            // 
+            this.tsbChangeLog.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.tsbChangeLog.Enabled = false;
+            this.tsbChangeLog.Image = ((System.Drawing.Image)(resources.GetObject("tsbChangeLog.Image")));
+            this.tsbChangeLog.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbChangeLog.Name = "tsbChangeLog";
+            this.tsbChangeLog.Size = new System.Drawing.Size(103, 22);
+            this.tsbChangeLog.Text = "View Change Log";
+            this.tsbChangeLog.Click += new System.EventHandler(this.tsbChangeLog_Click);
+            // 
             // propertyGrid1
             // 
             this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.propertyGrid1.Location = new System.Drawing.Point(3, 3);
             this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(553, 317);
+            this.propertyGrid1.Size = new System.Drawing.Size(605, 317);
             this.propertyGrid1.TabIndex = 1;
             // 
             // tabControl1
@@ -141,7 +154,7 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 25);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(567, 349);
+            this.tabControl1.Size = new System.Drawing.Size(619, 349);
             this.tabControl1.TabIndex = 2;
             // 
             // tabPage1
@@ -150,7 +163,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(559, 323);
+            this.tabPage1.Size = new System.Drawing.Size(611, 323);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Properties";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -161,7 +174,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(453, 323);
+            this.tabPage2.Size = new System.Drawing.Size(559, 323);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Console";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -175,25 +188,25 @@
             this.tbConsole.Name = "tbConsole";
             this.tbConsole.ReadOnly = true;
             this.tbConsole.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbConsole.Size = new System.Drawing.Size(447, 317);
+            this.tbConsole.Size = new System.Drawing.Size(553, 317);
             this.tbConsole.TabIndex = 0;
             // 
-            // tsbChangeLog
+            // tsbSaveLocalCredentials
             // 
-            this.tsbChangeLog.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.tsbChangeLog.Enabled = false;
-            this.tsbChangeLog.Image = ((System.Drawing.Image)(resources.GetObject("tsbChangeLog.Image")));
-            this.tsbChangeLog.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbChangeLog.Name = "tsbChangeLog";
-            this.tsbChangeLog.Size = new System.Drawing.Size(103, 22);
-            this.tsbChangeLog.Text = "View Change Log";
-            this.tsbChangeLog.Click += new System.EventHandler(this.tsbChangeLog_Click);
+            this.tsbSaveLocalCredentials.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.tsbSaveLocalCredentials.Enabled = false;
+            this.tsbSaveLocalCredentials.Image = ((System.Drawing.Image)(resources.GetObject("tsbSaveLocalCredentials.Image")));
+            this.tsbSaveLocalCredentials.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbSaveLocalCredentials.Name = "tsbSaveLocalCredentials";
+            this.tsbSaveLocalCredentials.Size = new System.Drawing.Size(108, 22);
+            this.tsbSaveLocalCredentials.Text = "Save Local Creds...";
+            this.tsbSaveLocalCredentials.Click += new System.EventHandler(this.tsbSaveLocalCredentials_Click);
             // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(567, 374);
+            this.ClientSize = new System.Drawing.Size(619, 374);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.toolStrip1);
             this.Font = new System.Drawing.Font("Verdana", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -229,6 +242,7 @@
         private System.Windows.Forms.ToolStripButton tsbAddToProject;
         private System.Windows.Forms.ToolStripButton btnAzDeployPath;
         private System.Windows.Forms.ToolStripButton tsbChangeLog;
+        private System.Windows.Forms.ToolStripButton tsbSaveLocalCredentials;
     }
 }
 
