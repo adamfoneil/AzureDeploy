@@ -287,19 +287,38 @@ namespace AzDeploy.Server
         private AzureCredentials GetAzureCredentials()
         {
             AzureCredentials result = null;
-            if (File.Exists(LocalCredentialSource))
+
+			string localCredFile = ResolvePath(LocalCredentialSource);
+
+            if (File.Exists(localCredFile))
             {
-                result = XmlSerializerHelper.Load<AzureCredentials>(LocalCredentialSource);
+                result = XmlSerializerHelper.Load<AzureCredentials>(localCredFile);
             }
             else
             {
                 result = new AzureCredentials() { AccountKey = StorageAccountKey, AccountName = StorageAccountName };
             }
 
+			if (result.IsNull()) throw new Exception("Couldn't find Azure credentials.");
+
             return result;            
         }
 
-        public void SaveLocalCredentials()
+		private string ResolvePath(string fileName)
+		{
+			string result = fileName;
+
+			Dictionary<string, Func<string>> macros = new Dictionary<string, Func<string>>()
+			{
+				{ "onedrive", () => OneDrive.Folder }
+			};
+
+			foreach (var key in macros) result = result.Replace($"%{key.Key}%", key.Value.Invoke());
+
+			return result;
+		}
+
+		public void SaveLocalCredentials()
         {
             var creds = new AzureCredentials() { AccountName = StorageAccountName, AccountKey = StorageAccountKey };
             XmlSerializerHelper.Save(creds, LocalCredentialSource);
@@ -309,6 +328,11 @@ namespace AzDeploy.Server
         {
             public string AccountName { get; set; }
             public string AccountKey { get; set; }
-        }
+
+			public bool IsNull()
+			{
+				return string.IsNullOrEmpty(AccountName) || string.IsNullOrEmpty(AccountKey);
+			}
+		}
     }
 }
